@@ -14,7 +14,7 @@ This repo is the source for the Paper [Consistent Ensemble Distillation for Audi
 | CED-Base | 86    | 44.0  | 50.0  |
 
 
-* All models work with 16 kHz audio and use 64 Mel-spectrograms, making them very fast. `CED-Tiny` should be faster than MobileNets on a single x86 CPU (even though MACs/FLops would indicate otherwise).
+* All models work with 16 kHz audio and use 64-dim Mel-spectrograms, making them very fast. `CED-Tiny` should be faster than MobileNets on a single x86 CPU (even though MACs/FLops would indicate otherwise).
 
 Checkpoints are hosted on [Zenodo](https://zenodo.org/record/8275347):
 
