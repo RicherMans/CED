@@ -1,0 +1,14 @@
+train_data: data/balanced_train/labels/balanced.tsv
+outputpath: logits/
+model: audiotransformer_base_4740
+epochs: 40
+topk: 20
+wavtransforms:
+  Shift:
+    min_shift: -0.5
+    max_shift: 0.5
+spectransforms:
+    - TimeMasking:
+        time_mask_param: 192
+    - FrequencyMasking:
+        freq_mask_param: 24

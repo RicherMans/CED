@@ -1,0 +1,24 @@
+outputpath: experiments
+logitspath: logits/ensemble5014/balanced/chunk_10/
+train_data: data/balanced_train/labels/balanced.tsv
+eval_data: data/eval.tsv
+loss: BCEWithLogitsLoss
+loss_args: 
+  reduction: none
+mixup: 0.5
+model: audiotransformer_mini
+model_args:
+  pooling: logit
+  init_bn: True
+batch_size: 32
+warmup_iters: 5000
+valid_every: 5
+epochs: 300
+mode: amp
+epoch_length: null
+num_workers: 4  # Number of dataset loaders
+early_stop: 10
+n_saved: 4
+optimizer: Adam8bit
+optimizer_args:
+    lr: 0.001
