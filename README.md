@@ -129,7 +129,7 @@ data/eval/-0nqfRcnAYE.wav	364	data/eval_data/hdf5/eval_0.h5
 
 ### 2. Download logits
 
-Download the logits used in the paper from [Zendodo](https://zenodo.org/record/8275347/files/logits.zip?download=1):
+Download the logits used in the paper from [Zenodo](https://zenodo.org/record/8275347/files/logits.zip?download=1):
 
 ```bash
 wget https://zenodo.org/record/8275347/files/logits.zip?download=1 -O logits.zip
