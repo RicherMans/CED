@@ -6,7 +6,7 @@ This repo is the source for the Paper [Consistent Ensemble Distillation for Audi
 ![Framework](figures/plot_performance.png)
 
 
-| Model | Parameters | AS-20K | AS-2M |
+| Model | Parameters (M) | AS-20K (mAP) | AS-2M (mAP) |
 |------|-------|-------|-------|
 | CED-Tiny | 5.5   | 36.5  | 48.1  |
 | CED-Mini | 9.6    | 38.5  | 49.0  |
