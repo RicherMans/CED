@@ -57,7 +57,7 @@ def main():
                 print(f"===== {str(wavpath):^20} =====")
                 for chunk_idx, chunk in enumerate(
                         wave.split(int(args.chunk_length * sr), -1)):
-                    output = model(chunk).squeeze(0)
+                    output = model(chunk.to(DEVICE)).squeeze(0)
                     for k, (prob,
                             label) in enumerate(zip(*output.topk(args.topk))):
                         lab_idx = label.item()
