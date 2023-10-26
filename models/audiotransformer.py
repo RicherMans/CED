@@ -405,7 +405,7 @@ class AudioTransformer(nn.Module):
 @register_model
 def audiotransformer_tiny(num_classes: int = 527,
                           pretrained=False,
-                          pretrained_url: str = '',
+                          pretrained_url: str = 'https://zenodo.org/records/8275347/files/audiotransformer_tiny_mae_as_10s.pt?download=1',
                           **kwargs):
     model_kwargs = dict(patch_size=16,
                         embed_dim=192,
