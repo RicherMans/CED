@@ -16,23 +16,27 @@ This repo is the source for the Paper [Consistent Ensemble Distillation for Audi
 
 * All models work with 16 kHz audio and use 64-dim Mel-spectrograms, making them very fast. `CED-Tiny` should be faster than MobileNets on a single x86 CPU (even though MACs/FLops would indicate otherwise).
 
-Checkpoints are hosted on [Zenodo](https://zenodo.org/record/8275347):
+Pretrained models could be downloaded from [Zenodo](https://zenodo.org/record/8275347) or [Hugging Face](https://huggingface.co/mispeech).
 
 
-| Model | Checkpoint 
-|------|-------|
-| CED-Tiny | [Link](https://zenodo.org/record/8275347/files/audiotransformer_tiny_mAP_4814.pt?download=1)| 
-| CED-Mini | [Link](https://zenodo.org/record/8275347/files/audiotransformer_mini_mAP_4896.pt?download=1) |
-| CED-Small| [Link](https://zenodo.org/record/8275319/files/audiotransformer_small_mAP_4958.pt?downloa) |
-| CED-Base | [Link](https://zenodo.org/record/8275347/files/audiotransformer_base_mAP_4999.pt?download=1) |
+|  | Zenodo | Hugging Face |
+|------|:-------:|:-------:|
+| CED-Tiny | [Link](https://zenodo.org/record/8275347/files/audiotransformer_tiny_mAP_4814.pt?download=1) | [Link](https://huggingface.co/mispeech/ced-tiny) |
+| CED-Mini | [Link](https://zenodo.org/record/8275347/files/audiotransformer_mini_mAP_4896.pt?download=1) | [Link](https://huggingface.co/mispeech/ced-mini) |
+| CED-Small| [Link](https://zenodo.org/record/8275319/files/audiotransformer_small_mAP_4958.pt?downloa)   | [Link](https://huggingface.co/mispeech/ced-small)|
+| CED-Base | [Link](https://zenodo.org/record/8275347/files/audiotransformer_base_mAP_4999.pt?download=1) | [Link](https://huggingface.co/mispeech/ced-base) |
 
+
+## Demo
+
+We have an online demo available [here](https://huggingface.co/spaces/mispeech/ced-base) for CED-Base.
 
 ## Inference/Usage
 
 
 To just use the CED models for inference, simply run:
 
-```
+```bash
 git clone https://github.com/Richermans/CED/
 cd CED/
 pip3 install -r requirements.txt
@@ -53,6 +57,7 @@ python3 inference.py -m ced_base resources/*
 
 ```
 
+You can also use the models directly from Hugging Face, see [here](https://huggingface.co/mispeech/ced-base) for usage instructions.
 
 ## Training/Reproducing results
 
