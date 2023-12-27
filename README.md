@@ -1,6 +1,6 @@
 # Consistent Ensemble Distillation for Audio Tagging (CED)
 
-This repo is the source for the Paper [Consistent Ensemble Distillation for Audio Tagging](https://arxiv.org/abs/2308.11957). 
+This repo is the source for the ICASSP 2024 Paper [Consistent Ensemble Distillation for Audio Tagging](https://arxiv.org/abs/2308.11957). 
 
 
 ![Framework](figures/plot_performance.png)
