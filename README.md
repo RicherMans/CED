@@ -210,9 +210,10 @@ The repo can be found [here](https://github.com/RicherMans/HEAR_CED).
 
 
 ### Citation
+
 Please cite our paper if you find this work useful:
 
-```bibtext
+```bibtex
 @inproceedings{dinkel2023ced,
   title={CED: Consistent ensemble distillation for audio tagging},
   author={Dinkel, Heinrich and Wang, Yongqing and Yan, Zhiyong and Zhang, Junbo and Wang, Yujun},
