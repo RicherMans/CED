@@ -209,3 +209,15 @@ The repo can be found [here](https://github.com/RicherMans/HEAR_CED).
 | ced-base      | 48.35              | 96.60                    | 69.10   | 92.19   | 96.65  | 65.48  | 88.60       | 94.36             | 89.29                | 67.85      | 14.76       | 97.43            | 96.55            | 82.81             | 68.20           | 86.93              | 89.67               | 22.69           | 38.57              |
 
 
+### Citation
+
+Please cite our paper if you find this work useful:
+
+```bibtex
+@inproceedings{dinkel2023ced,
+  title={CED: Consistent ensemble distillation for audio tagging},
+  author={Dinkel, Heinrich and Wang, Yongqing and Yan, Zhiyong and Zhang, Junbo and Wang, Yujun},
+  booktitle={ICASSP 2024-2024 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  year={2024}
+}
+```
