@@ -1,10 +1,12 @@
-import torch
 import argparse
-import models
-import torch.nn as nn
-import onnx
 from typing import Dict
+
+import onnx
+import torch
+import torch.nn as nn
 from onnxruntime.quantization import QuantType, quantize_dynamic
+
+import models
 
 DEVICE = torch.device('cpu')
 SR = 16000
@@ -46,17 +48,19 @@ def main():
     model = model.to(DEVICE).eval()
 
     with torch.no_grad():
-        class mymodel(nn.Module):
+        class MyModel(nn.Module):
             def __init__(self):
-                super(mymodel, self).__init__()
+                super(MyModel, self).__init__()
                 self.model = model
 
             def forward(self, mel):
-                # mel = mel.permute(0,2,1) #如果有需要，可以在这里进行一次转置，使特征维度和时间维度对调 如果对调，下面的动态轴也要对换
+                # mel = mel.permute(0,2,1)
+                # If necessary, transpose can be performed here, switching the feature dimensions with the time dimensions.
+                # If transposed, the following dynamic axes should also be interchanged.
                 feat = self.model.forward_spectrogram(mel)
                 return feat
 
-        model = mymodel()
+        model = MyModel()
         dummy_input = torch.ones(1, 64, 301)
         out = model(dummy_input)
         print(out.shape)
@@ -72,7 +76,7 @@ def main():
             input_names=['feats'],
             output_names=['prob'],
             dynamic_axes={
-                'feats': {0: 'batch_size', 1: 'channel_dim', 2: 'feature_dim'}
+                'feats': {0: 'batch_size', 1: 'channel_dim', 2: 'time_dim'}
             }
         )
 

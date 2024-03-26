@@ -1,9 +1,11 @@
-import onnxruntime as ort
+import argparse
+
 import kaldi_native_fbank as knf
+import numpy as np
+import onnxruntime as ort
 import torch
 import torchaudio
-import numpy as np
-import argparse
+
 import models
 
 
@@ -60,7 +62,7 @@ def main():
 
     mellen = mel.shape[2]
     start = 0
-    while start + 1000 <= mellen: #十秒检测一次
+    while start + 1000 <= mellen: #10-second detection once
         melt = mel[:,:,start:start + 1000]
         start += 1000
 
@@ -74,8 +76,6 @@ def main():
         top3_indices = sorted_indices[-3:]
         top3_indices = top3_indices[::-1]
         print(top3_indices)
-
-
 
 
 if __name__ == "__main__":
