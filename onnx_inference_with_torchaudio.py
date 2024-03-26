@@ -18,7 +18,7 @@ def main():
         f"Public Checkpoint [{','.join(models.list_models())}] or Experiment Path",
         nargs='?',
         choices=models.list_models(),
-        default='ced_mini.onnx')
+        default='ced_mini.int8.onnx')
 
     args = parser.parse_args()
 
