@@ -161,7 +161,17 @@ logits/
 python3 run.py train trainconfig/balanced_mixup_tiny_T_ensemble5014_chunk10.yaml
 ```
 
+## Export ONNX and Inference ONNX
 
+```bash
+python3 export_onnx.py -m ced_tiny
+#or ced_mini ced_small ced_base
+```
+
+```bash
+python3 onnx_inference_with_kaldi.py test.wav -m ced_tiny.onnx
+python3 onnx_inference_with_torchaudio.py test.wav -m ced_tiny.onnx
+```
 
 ## Training on your own data
 
