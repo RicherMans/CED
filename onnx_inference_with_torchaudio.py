@@ -1,9 +1,11 @@
+import argparse
+
+import numpy as np
+import onnxruntime as ort
 import torch
 import torchaudio
 import torchaudio.transforms as aut
-import onnxruntime as ort
-import numpy as np
-import argparse
+
 import models
 
 
@@ -46,7 +48,7 @@ def main():
 
     wavlen = wav.shape[0]
     start = 0
-    while start + 16000 * 3 <= wavlen: #3秒检测一次
+    while start + 16000 * 3 <= wavlen: #3-second detection once
         wavt = wav[start:start + 16000 * 3]
         start += 16000 * 3
 

@@ -172,6 +172,7 @@ python3 export_onnx.py -m ced_tiny
 python3 onnx_inference_with_kaldi.py test.wav -m ced_tiny.onnx
 python3 onnx_inference_with_torchaudio.py test.wav -m ced_tiny.onnx
 ```
+Why use Kaldi to calculate Mel features? Because it has ready-made C++ implementation code, which can be found here: https://github.com/csukuangfj/kaldi-native-fbank/tree/master
 
 ## Training on your own data
 
