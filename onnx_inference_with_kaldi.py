@@ -54,7 +54,6 @@ def main():
     features = torch.stack(features)
     mel = features.unsqueeze(0).permute(0,2,1)
 
-
     providers = ['CPUExecutionProvider']
     sess_options = ort.SessionOptions()
     sess = ort.InferenceSession(
@@ -62,8 +61,11 @@ def main():
 
     mellen = mel.shape[2]
     start = 0
-    while start + 1000 <= mellen: #10-second detection once
+    while True:
+        #10-second detection once
         melt = mel[:,:,start:start + 1000]
+        if melt.shape[-1] == 0:
+            break
         start += 1000
 
         x = sess.run(None, input_feed={'feats': melt.numpy()})

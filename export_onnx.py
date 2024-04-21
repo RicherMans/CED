@@ -76,7 +76,8 @@ def main():
         input_names=['feats'],
         output_names=['prob'],
         dynamic_axes={
-            'feats': {0: 'batch_size', 2: 'time_dim'}
+            'feats': {0: 'batch_size', 2: 'time_dim'},
+            'prob': {0: 'batch_size'}
         }
     )
 
