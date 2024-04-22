@@ -220,6 +220,12 @@ The repo can be found [here](https://github.com/RicherMans/HEAR_CED).
 | ced-base      | 48.35              | 96.60                    | 69.10   | 92.19   | 96.65  | 65.48  | 88.60       | 94.36             | 89.29                | 67.85      | 14.76       | 97.43            | 96.55            | 82.81             | 68.20           | 86.93              | 89.67               | 22.69           | 38.57              |
 
 
+### Android APks
+
+Thanks to [csukuangfj](https://github.com/csukuangfj), there are also pre-compiled android binaries using [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx).
+
+Binaries are available on the k2-fsa sherpa page, https://k2-fsa.github.io/sherpa/onnx/audio-tagging/apk.html.
+
 ### Citation
 
 Please cite our paper if you find this work useful:
