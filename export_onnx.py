@@ -55,10 +55,17 @@ def main():
         choices=models.list_models(),
         default='ced_mini')
 
+    parser.add_argument(
+        '--max-frames',
+        type=int,
+        default=1012,
+        help="Max number of frames the model can process."
+        )
+
     args = parser.parse_args()
 
 
-    model = getattr(models, args.model)(pretrained=True)
+    model = getattr(models, args.model)(target_length=args.max_frames, pretrained=True)
     model = model.to(DEVICE).eval()
 
     model = MyModel(model)
