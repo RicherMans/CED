@@ -38,16 +38,16 @@ def main():
     opts.frame_opts.frame_length_ms = 32
     opts.frame_opts.frame_shift_ms = 10
     print(opts)
-    online_whisper_fbank = knf.OnlineFbank(opts)
+    online_fbank = knf.OnlineFbank(opts)
 
     audio, sr = torchaudio.load(args.input_wav)
-    online_whisper_fbank.accept_waveform(sampling_rate=16000, waveform=audio.numpy().flatten())
-    online_whisper_fbank.input_finished()
+    online_fbank.accept_waveform(sampling_rate=16000, waveform=audio.numpy().flatten())
+    online_fbank.input_finished()
 
 
     features = []
-    for i in range(online_whisper_fbank.num_frames_ready):
-        f = online_whisper_fbank.get_frame(i)
+    for i in range(online_fbank.num_frames_ready):
+        f = online_fbank.get_frame(i)
         f = torch.from_numpy(f)
         features.append(f)
 
