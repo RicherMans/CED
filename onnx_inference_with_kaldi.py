@@ -2,11 +2,11 @@ import argparse
 
 import kaldi_native_fbank as knf
 import numpy as np
+from onnx_inference_with_torchaudio import amp_to_db
 import onnxruntime as ort
 import torch
 import torchaudio
 
-import models
 
 
 def main():
@@ -17,11 +17,10 @@ def main():
         '--model',
         type=str,
         metavar=
-        f"Public Checkpoint [{','.join(models.list_models())}] or Experiment Path",
+        f"Path to exported onnx model",
         nargs='?',
-        choices=models.list_models(),
-        default='ced_mini.onnx')
-
+        default='ced_mini.int8.onnx')
+    parser.add_argument('--chunk',default=5, type=float)
     args = parser.parse_args()
 
     opts = knf.FbankOptions()
@@ -37,7 +36,8 @@ def main():
     opts.frame_opts.snip_edges = False
     opts.frame_opts.frame_length_ms = 32
     opts.frame_opts.frame_shift_ms = 10
-    print(opts)
+    opts.use_log_fbank=False
+    # print(opts)
     online_fbank = knf.OnlineFbank(opts)
 
     audio, sr = torchaudio.load(args.input_wav)
@@ -47,28 +47,26 @@ def main():
 
     features = []
     for i in range(online_fbank.num_frames_ready):
-        f = online_fbank.get_frame(i)
-        f = torch.from_numpy(f)
+        f = amp_to_db(online_fbank.get_frame(i))
         features.append(f)
 
-    features = torch.stack(features)
-    mel = features.unsqueeze(0).permute(0,2,1)
+    features = np.stack(features, axis=-1)[None,...]
 
     providers = ['CPUExecutionProvider']
     sess_options = ort.SessionOptions()
     sess = ort.InferenceSession(
         args.model, providers=providers, sess_options=sess_options)
 
-    mellen = mel.shape[2]
     start = 0
+    chunk_length = int(args.chunk * 100) # in number of frames, per frame 10ms
     while True:
         #10-second detection once
-        melt = mel[:,:,start:start + 1000]
+        melt = features[:,:,start:start + chunk_length]
         if melt.shape[-1] == 0:
             break
-        start += 1000
+        start += chunk_length
 
-        x = sess.run(None, input_feed={'feats': melt.numpy()})
+        x = sess.run(None, input_feed={'feats': melt})
         x = x[0][0]
 
         argmax = np.argmax(x)

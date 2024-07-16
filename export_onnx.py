@@ -29,9 +29,9 @@ def add_meta_data(filename: str, meta_data: Dict[str, str]):
     onnx.save(model, filename)
 
 
-class MyModel(nn.Module):
+class OnnxExportModel(nn.Module):
     def __init__(self,model):
-        super(MyModel, self).__init__()
+        super(OnnxExportModel, self).__init__()
         self.model = model
 
     def forward(self, mel):
@@ -65,28 +65,33 @@ def main():
     args = parser.parse_args()
 
 
-    model = getattr(models, args.model)(target_length=args.max_frames, pretrained=True)
+    model = getattr(models, args.model)(target_length=args.max_frames,
+                                        pretrained=True)
+    dummy_input = torch.ones(1, model.n_mels, args.max_frames)
     model = model.to(DEVICE).eval()
 
-    model = MyModel(model)
-    dummy_input = torch.ones(1, 64, 301)
+    model = OnnxExportModel(model)
     out = model(dummy_input)
-    print(out.shape)
+    print(f"Model Output is {out.shape}")
 
     output_model = args.model + '.onnx'
-    torch.onnx.export(
-        model, dummy_input,
-        output_model,
-        do_constant_folding=True,
-        verbose=False,
-        opset_version=12,
-        input_names=['feats'],
-        output_names=['prob'],
-        dynamic_axes={
-            'feats': {0: 'batch_size', 2: 'time_dim'},
-            'prob': {0: 'batch_size'}
-        }
-    )
+    torch.onnx.export(model,
+                      dummy_input,
+                      output_model,
+                      do_constant_folding=True,
+                      verbose=False,
+                      opset_version=12,
+                      input_names=['feats'],
+                      output_names=['prob'],
+                      dynamic_axes={
+                          'feats': {
+                              0: 'batch_size',
+                              2: 'time_dim'
+                          },
+                          'prob': {
+                              0: 'batch_size'
+                          }
+                      })
 
     meta_data = {
         "model_type": "CED",
@@ -105,6 +110,7 @@ def main():
         op_types_to_quantize=["MatMul"],
         weight_type=QuantType.QInt8,
     )
+    print(f"Results is at {filename_int8}")
     # ced_mini onnx-39.1mb int8onnx-9.8mb
 
 

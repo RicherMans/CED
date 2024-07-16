@@ -1,4 +1,5 @@
 import argparse
+from typing import Optional
 
 import numpy as np
 import onnxruntime as ort
@@ -6,7 +7,16 @@ import torch
 import torchaudio
 import torchaudio.transforms as aut
 
-import models
+
+# Taken from torchaudio
+def amp_to_db(x,
+              top_db: Optional[float] = None,
+              multiplier: float = 10.0,
+              amin=1e-10):
+    x_db = multiplier * np.log10(np.clip(x, a_min=amin, a_max=None))
+    if top_db is not None:
+        x_db = np.maximum(x_db, np.amax(x_db) - top_db)
+    return x_db
 
 
 def main():
@@ -17,58 +27,56 @@ def main():
         '--model',
         type=str,
         metavar=
-        f"Public Checkpoint [{','.join(models.list_models())}] or Experiment Path",
+        f"Path to exported onnx model",
         nargs='?',
-        choices=models.list_models(),
         default='ced_mini.int8.onnx')
+    parser.add_argument('--chunk',default=5, type=float)
 
     args = parser.parse_args()
 
-    trans1 = aut.MelSpectrogram(f_min=0,
-                                sample_rate=16000,
-                                win_length=512,
-                                center=True,
-                                n_fft=512,
-                                f_max=8000,
-                                hop_length=160,
-                                n_mels=64)
-    trans2 = aut.AmplitudeToDB(top_db=120)
+    front_end = torch.nn.Sequential(
+        aut.MelSpectrogram(f_min=0,
+                           sample_rate=16000,
+                           win_length=512,
+                           center=False,
+                           n_fft=512,
+                           f_max=8000,
+                           hop_length=160,
+                           n_mels=64), aut.AmplitudeToDB(top_db=120))
 
     wav, sr = torchaudio.load(args.input_wav)
-    wav = wav[0]
-    wavlen = wav.shape[0]
-    padding_size = 48000 - (wavlen % 48000)
-    wav = torch.nn.functional.pad(wav, (0, padding_size), 'constant', 0)
-
-
+    #Stereo
+    if wav.ndim == 2:
+        wav = wav.mean(0)
+    if sr != 16000:
+        wav = torchaudio.functional.resample(wav, sr, 16000)
     providers = ['CPUExecutionProvider']
     sess_options = ort.SessionOptions()
-    sess = ort.InferenceSession(
-        args.model, providers=providers, sess_options=sess_options)
+    sess = ort.InferenceSession(args.model,
+                                providers=providers,
+                                sess_options=sess_options)
 
-    wavlen = wav.shape[0]
     start = 0
-    while start + 16000 * 3 <= wavlen: #3-second detection once
-        wavt = wav[start:start + 16000 * 3]
-        start += 16000 * 3
+    chunk_length = int(args.chunk * 16000)
+    while True:
+        wavt = wav[start:start + chunk_length]
+        if wavt.shape[-1] == 0:
+            break
+        start += chunk_length
 
-        mel = trans1(wavt)
-        mel = trans2(mel)
+        mel = front_end(wavt)
         mel = mel.unsqueeze(0)
-        x = sess.run(None, input_feed={'feats': mel.numpy()})
-        x = x[0][0]
+        y = sess.run(None, input_feed={'feats': mel.numpy()})
+        y = y[0][0]
 
-        argmax = np.argmax(x)
-        print(argmax, x[argmax])
+        argmax = np.argmax(y)
+        print(f"{argmax=} {y[argmax]=}")
 
-        sorted_indices = np.argsort(x)
+        sorted_indices = np.argsort(y)
         top3_indices = sorted_indices[-3:]
         top3_indices = top3_indices[::-1]
-        print(top3_indices)
-
+        print(f"Top-3: {top3_indices}")
 
 
 if __name__ == "__main__":
     main()
-
-
