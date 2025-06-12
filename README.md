@@ -33,6 +33,30 @@ We have an online demo available [here](https://huggingface.co/spaces/mispeech/c
 
 ## Inference/Usage
 
+### Huggingface Transformers
+
+```python
+# pip install transformers
+from transformers import AutoModelForAudioClassification, AutoFeatureExtractor
+
+model_name = "mispeech/ced-base"
+feature_extractor = AutoFeatureExtractor.from_pretrained(model_name, trust_remote_code=True)
+model = AutoModelForAudioClassification.from_pretrained(model_name, trust_remote_code=True)
+
+import torchaudio
+audio, sampling_rate = torchaudio.load("/path-to/JeD5V5aaaoI_931_932.wav")
+assert sampling_rate == 16000
+inputs = feature_extractor(audio, sampling_rate=sampling_rate, return_tensors="pt")
+
+import torch
+with torch.no_grad():
+    logits = model(**inputs).logits
+
+predicted_class_id = torch.argmax(logits, dim=-1).item()
+model.config.id2label[predicted_class_id]
+```
+
+### Locally
 
 To just use the CED models for inference, simply run:
 
