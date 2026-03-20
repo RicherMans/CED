@@ -35,6 +35,28 @@ We have an online demo available [here](https://huggingface.co/spaces/mispeech/c
 
 ### Huggingface Transformers
 
+#### Inference (Onnx, Recommended) 
+
+```python 
+>>> from optimum.onnxruntime import ORTModelForAudioClassification
+
+>>> model_name = "mispeech/ced-mini"
+>>> model = ORTModelForAudioClassification.from_pretrained(model_name, trust_remote_code=True)
+
+>>> import torchaudio
+>>> audio, sampling_rate = torchaudio.load("/path-to/JeD5V5aaaoI_931_932.wav")
+>>> assert sampling_rate == 16000
+>>> input_name = model.session.get_inputs()[0].name
+>>> output = model(**{input_name: torch.randn(1, 16000)})
+>>> logits = output.logits.squeeze()
+>>> for idx in logits.argsort()[-2:][::-1]:
+>>>   print(f"{model.config.id2label[idx]}: {logits[idx]:.4f}")
+'Finger snapping: 0.9155'
+'Slap: 0.0567'
+```
+
+Or standard Huggingface Transformers
+
 ```python
 # pip install transformers
 from transformers import AutoModelForAudioClassification, AutoFeatureExtractor
